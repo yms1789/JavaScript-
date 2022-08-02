@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 
+        input에 form을 달아주면 form에 eventListener를 달아줌
+        input만 쓰면 되지만 웹 표준에 맞게 작성 하려면 form 내부에 input 태그가 들어가는 것이 더 정확
+     -->
+    <form id="form">
+        <input type="text" id="input">
+        <button>확인</button>
+    </form>
+    <br>
+    <div id="logs"></div>
+    <script>
+        const $input = document.querySelector('#input');
+        const $form = document.querySelector('#form');
+        const $logs = document.querySelector('#logs');
+        const answer = [];
+        const numbers = []; // [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        let out = 0;
+        for (let i = 0; i < 9; i++) {
+            numbers.push(i + 1);
+        }
+
+        for (let i = 0; i < 4; i++) { // 4번 반복
+            const index = Math.floor(Math.random() * numbers.length); // 0 ~ 8 정수
+            answer.push(numbers[index]);
+            numbers.splice(index, 1);
+        }
+        /* 
+            form이 submit 할 때 페이지가 새로고침 됨 -> 기본 동작
+            기본 동작을 수정할 수는 없지만 끌 수는 있음
+            새로고침되면 기존 변수에 있던 값들이 모두 날아가버리는 것을 방지하기 위함
+        */
+        const tries = [];
+        const checkInput = (input) => { // 검사 코드
+            if (input.length !== 4) {
+                return alert('4자리 숫자를 입력해주세요');
+            }
+            if (new Set(input).size !== 4) { // Set = 중복을 제거한 배열
+                return alert('각 자리 숫자를 중복되지 않게 입력해주세요');
+            }
+            if (tries.includes(input)) {
+                return alert('이미 시도한 값입니다.');
+            }
+            return true;
+        }
+        const defeated = () => {
+            const message = document.createTextNode(`패배! 정답은 ${answer.join('')}`);
+            const para = document.createElement('p');
+            para.style.color = 'red';
+            para.append(message);
+            $logs.append(para);
+            $input.disabled = true;
+        }
+        $form.addEventListener('submit', (event) => {
+            event.preventDefault(); // 기본 동작 막기
+            const value = $input.value;
+            $input.value = '';
+            const valid = checkInput(value);
+            if (!valid) {
+                // 입력 값 문제 O
+                return;
+            }
+            // 입력 값 문제 X
+            if (answer.join('') === value) {
+                /* 
+                    join 함수는 배열 내 값을 합치기 위함
+                    join()에 따옴표 없이 쓰면 값 중간 중간에 콤마가 들어감(default)
+                    join() 안에 어떤 값을 넣냐에 따라 값을 합칠 때 중간에 들어가는 값이 바뀜
+                    ex) join(':') -> '1:2:3:4'
+                        join('') -> '1234'
+                */
+                $logs.textContent = '홈런!';
+                $logs.style.color = 'green';
+                $input.disabled = true;
+                return;
+            }
+            if (tries.length >= 9) {
+                // const message = document.createTextNode(`패배! 정답은 ${answer.join('')}`);
+                // $logs.appendChild(message);
+                defeated();
+                return;
+            }
+            // 몇 스트라이크 몇 볼인지 검사
+            let strike = 0;
+            let ball = 0;
+            for (let i = 0; i < answer.length; i++) {
+                const index = value.indexOf(answer[i]);
+                if (index <= -1) {
+                    continue;
+                }
+                if (index === i) {
+                    strike += 1;
+                }
+                else {
+                    ball += 1;
+                }
+            }
+            if (strike === 0 && ball === 0) {
+                out += 1;
+                $logs.append(`${value}: ${out} 아웃`, document.createElement('br'));
+            }
+            else {
+                $logs.append(`${value}: ${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
+            }
+            if (out === 3) {
+                defeated();
+            }
+            tries.push(value);
+        });
+    </script>
+</body>
+
+</html>

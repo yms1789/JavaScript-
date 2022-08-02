@@ -17,3 +17,9 @@
 ### <순서도>
 
 ![스크린샷 2022-08-02 오후 1 31 56](https://user-images.githubusercontent.com/71623879/182292229-20f8abe9-6200-4464-89dc-3dc6f4970cbc.png)
+
+## 3. 숫자야구
+
+### <순서도>
+
+![스크린샷 2022-08-02 오후 4 25 56](https://user-images.githubusercontent.com/71623879/182316823-5571cf80-c374-41f9-be7d-0edb5e010d6c.png)

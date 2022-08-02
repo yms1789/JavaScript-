@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 
 <head>
     <meta charset="UTF-8">
@@ -67,9 +67,25 @@
         const $operator = document.querySelector('#operator');
         const $result = document.querySelector('#result');
         const onClickNumber = (event) => {
-            if (!operator) {
+            /* 중첩 if문을 제거하는 법
+                1. if문 다음에 나오는 공통된 절차를 각 분기점 내부에 넣는다.
+                2. 분기점에서 짧은 절차부터 실행하게 if문을 작성한다.
+                3. 짧은 절차가 끝나면 return(함수 내부의 경우) 이나 break(for 문 내부의 경우)
+                로 중단한다.
+                4. else를 제거한다.
+                5. 다음 중첩된 분기문이 나오면 1 ~ 4의 과정을 반복한다.
+            */
+            if (!operator) { // 비어있다
                 numOne += event.target.textContent;
                 $result.value += event.target.textContent;
+                return;
+            }
+            // 비어있지 않다
+            if (!numOne) {
+                numOne = event.target.textContent;
+                numOne *= -1;
+                $result.value = -1 * event.target.textContent;
+                operator = '';
                 return;
             }
             if (!numTwo) {
@@ -79,35 +95,81 @@
             $result.value += event.target.textContent;
         };
         const onClickOperator = (event) => {
+            if (numTwo) {
+                switch (operator) {
+                    case '+':
+                        $result.value = parseInt(numOne) + parseInt(numTwo);
+                        break;
+                    case '-':
+                        $result.value = numOne - numTwo;
+                        break;
+                    case '*':
+                        $result.value = numOne * numTwo;
+                        break;
+                    case '/':
+                        $result.value = numOne / numTwo;
+                        break;
+                    default:
+                        break;
+                }
+                numOne = $result.value;
+                numTwo = '';
+
+            }
             if (numOne) {
                 operator = event.target.textContent;
-                $operator.value += operator;
+                $operator.value = operator;
             }
             else {
-                alert('숫자를 먼저 입력하세요');
+                operator = event.target.textContent;
+                $operator.value = operator;
             }
         }
+        const onClickResult = () => {
+            if (numTwo) {
+                switch (operator) {
+                    case '+':
+                        $result.value = parseInt(numOne) + parseInt(numTwo);
+                        break;
+                    case '-':
+                        $result.value = numOne - numTwo;
+                        break;
+                    case 'x':
+                        $result.value = numOne * numTwo;
+                        break;
+                    case '/':
+                        $result.value = numOne / numTwo;
+                        break;
+                    default:
+                        break;
+                }
+                $operator.value = '';
+                numOne = $result.value;
+                operator = '';
+                numTwo = '';
+            }
+            else {
+                alert("숫자를 먼저 입력하세요.");
+            }
+        }
+
+        const onClickClear = () => {
+            numOne = '';
+            operator = '';
+            numTwo = '';
+            $operator.value = '';
+            $result.value = '';
+        }
+
         for (let i = 0; i <= 9; i++) {
             document.querySelector(`#num-${i}`).addEventListener('click', onClickNumber);
         }
-        // document.querySelector('#num-0').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-0').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-1').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-2').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-3').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-4').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-5').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-6').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-7').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-8').addEventListener('click', onClickNumber);
-        // document.querySelector('#num-9').addEventListener('click', onClickNumber);
-
         document.querySelector('#plus').addEventListener('click', onClickOperator);
         document.querySelector('#minus').addEventListener('click', onClickOperator);
         document.querySelector('#divide').addEventListener('click', onClickOperator);
         document.querySelector('#multiply').addEventListener('click', onClickOperator);
-        document.querySelector('#calculator').addEventListener('click', () => { });
-        document.querySelector('#clear').addEventListener('click', () => { });
+        document.querySelector('#calculate').addEventListener('click', onClickResult);
+        document.querySelector('#clear').addEventListener('click', onClickClear);
     </script>
 </body>
 

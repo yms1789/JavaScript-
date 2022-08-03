@@ -16,7 +16,7 @@
     <input type="text" />
     <button>입력</button>
     <script>
-      const nunmber = parseInt(prompt("몇 명이 참가 하나요?"), 10);
+      const number = parseInt(prompt("몇 명이 참가 하나요?"), 10);
       if (number) {
         const $input = document.querySelector('input');
         const $word = document.querySelector('#word');
@@ -35,7 +35,7 @@
               // 데이터가 바뀌면 화면도 바뀌어야 함
               $word.textContent = word;
               const order = Number($order.textContent); // 현재 순서
-              if (order === nunmber) {
+              if (order === number) {
                 $order.textContent = 1;
               } else {
                 $order.textContent = order + 1;

@@ -28,15 +28,21 @@
   <br>
   <div id="result"></div>
   <div>
-    점수: <span id="score">0</span>
+    내 점수: <span id="my-score">0</span>
   </div>
+  <div>
+    컴퓨터 점수: <span id="com-score">0</span>
+  </div>
+  <div id="logs"></div>
   <script>
     const $computer = document.querySelector('#computer');
-    const $score = document.querySelector('#score');
+    const $comScore = document.querySelector('#com-score');
+    const $myScore = document.querySelector('#my-score');
     const $rock = document.querySelector('#rock');
     const $scissors = document.querySelector('#scissors');
     const $paper = document.querySelector('#paper');
     const $result = document.querySelector('#result');
+    const $logs = document.querySelector('#logs');
     const IMG_URL = './rsp.png';
     $computer.style.background = `url(${IMG_URL}) -440px 0`;
     $computer.style.backgroundSize = 'auto 200px';
@@ -95,25 +101,35 @@
         // 조건문 내에 같은 변수를 논리연산하는 식이 있다면 [2, -1].includes(diff)로 바꾸자
         if ([2, -1].includes(diff)) {
           $result.textContent = '승리';
-          $score.textContent = parseInt($score.textContent) + 1;
+          $myScore.textContent = parseInt($myScore.textContent) + 1;
         } else if ([-2, 1].includes(diff)) {
           $result.textContent = '패배';
-          $score.textContent = parseInt($score.textContent) - 1;
+          $comScore.textContent = parseInt($comScore.textContent) + 1;
         } else {
           $result.textContent = '무승부';
         }
-        setTimeout(() => {
-          /* 1.
-          // clearInterval(intervalId); */
-          // 3. 
-          clickable = true;
-          $result.textContent = '';
-          intervalId = setInterval(changeComputerHand, 50);
-          /* 2.
-          // $rock.addEventListener('click', clickButton);
-          // $paper.addEventListener('click', clickButton);
-          // $scissors.addEventListener('click', clickButton); */
-        }, 1000)
+        if (parseInt($myScore.textContent) >= 3) {
+          $logs.append(`게임 종료 내 승리`);
+          return;
+        }
+        else if (parseInt($comScore.textContent) >= 3) {
+          $logs.append(`게임 종료 컴퓨터 승리`);
+          return;
+        }
+        else {
+          setTimeout(() => {
+            /* 1.
+            // clearInterval(intervalId); */
+            // 3. 
+            clickable = true;
+            $result.textContent = '';
+            intervalId = setInterval(changeComputerHand, 50);
+            /* 2.
+            // $rock.addEventListener('click', clickButton);
+            // $paper.addEventListener('click', clickButton);
+            // $scissors.addEventListener('click', clickButton); */
+          }, 1000)
+        }
       }
     };
     // 위 코드의 문제점: 버튼 클릭을 여러번 하면 setInterval이 여러번 호출되지만 intervalId에는 마지막에 호출된 setInterval의 id만 들어감

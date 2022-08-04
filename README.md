@@ -29,3 +29,7 @@
 ### <순서도>
 
 ![스크린샷 2022-08-03 오후 4 23 38](https://user-images.githubusercontent.com/71623879/182548837-5b4353f4-cca6-4024-91e9-7ce6b54f8f85.png)
+
+## 5. 가위바위보
+
+![스크린샷 2022-08-04 오후 1 54 34](https://user-images.githubusercontent.com/71623879/182766090-14be4769-6eb6-4d75-baad-2146319d2b32.png)

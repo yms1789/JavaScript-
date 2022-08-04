@@ -33,3 +33,13 @@
 ## 5. 가위바위보
 
 ![스크린샷 2022-08-04 오후 1 54 34](https://user-images.githubusercontent.com/71623879/182766090-14be4769-6eb6-4d75-baad-2146319d2b32.png)
+
+## 6. 반응속도 체크하기
+
+### <초기 순서도>
+
+![스크린샷 2022-08-04 오후 7 14 13](https://user-images.githubusercontent.com/71623879/182823387-45bc09c5-3929-434d-ba24-c6ed7e5501f4.png)
+
+### <최종 순서도>
+
+![스크린샷 2022-08-04 오후 7 14 20](https://user-images.githubusercontent.com/71623879/182823340-bc38f551-10b0-4b94-a103-1a6f115792aa.png)

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    td {
+      border: 1px solid black;
+      width: 60px;
+      height: 60px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    const { body } = document;
+    /* => const body = document.body; 랑 같음.
+      구조분해 할당: 변수 명과 객체의 속성이 동일할 때 사용
+      쓰는 이유: 객체 혹은 배열을 변수로 분해할 수 있게 해줌!
+      ex) const arr = [1, 2, 3, 4, 5];
+          const one = arr[0];
+          const two = arr[1];
+          const three = arr[2];
+          const four = arr[3];
+          const five = arr[4];
+          위 코드를 구조분해 할당을 사용하면 -> const [one, two, three, four, five] = arr;
+      */
+    const $table = document.createElement('table');
+    const $result = document.createElement('div');
+    const rows = [];
+    let turn = 'O';
+    /*
+    배열 안에 태그를 넣을 수도 있다!
+      rows = [
+        [$td, $td, $td],
+        [$td, $td, $td],
+        [$td, $td, $td]
+      ]
+    */
+
+
+    const checkWinner = (target) => {
+      let rowIdx = target.parentNode.rowIndex; // tr 태그(td 태그의 부모)가 갖고 있음
+      let cellIdx = target.cellIndex; // td 태그가 갖고 있음
+      // event target을 파라미터로 받으므로 굳이 forEach문을 이용해서 해당 칸의 index를 찾을 필요 X
+      // rows.forEach((row, ri) => {
+      //   row.forEach((cell, ci) => {
+      //     if (cell === target) {
+      //       rowIdx = ri;
+      //       cellIdx = ci;
+      //     }
+      //   });
+      // });
+      /* 
+        유사 배열 객체: 배열 처럼 보이지만 사실 key가 숫자이고 length 값을 갖고 있는 객체를 말함
+        ex) $table.children -> HTMLCollection(3) [tr, tr, tr] (배열 처럼 보이지만 객체임. 배열 method 사용 X)
+        유사 배열 객체를 배열로 만드는 방법: Array.from($table.children) -> (3) [tr, tr, tr] (앞에 아무 이름도 안붙으면 배열!)
+      */
+      let hasWinner = false;
+
+      // 가로줄 검사
+      if (
+        rows[rowIdx][0].textContent === turn &&
+        rows[rowIdx][1].textContent === turn &&
+        rows[rowIdx][2].textContent === turn
+      ) {
+        hasWinner = true;
+      }
+      // 세로줄 검사
+      if (
+        rows[0][cellIdx].textContent === turn &&
+        rows[1][cellIdx].textContent === turn &&
+        rows[2][cellIdx].textContent === turn
+      ) {
+        hasWinner = true;
+      }
+      // 대각선 검사
+      if (
+        rows[0][0].textContent === turn &&
+        rows[1][1].textContent === turn &&
+        rows[2][2].textContent === turn
+      ) {
+        hasWinner = true;
+      }
+      if (
+        rows[0][2].textContent === turn &&
+        rows[1][1].textContent === turn &&
+        rows[2][0].textContent === turn
+      ) {
+        hasWinner = true;
+      }
+      return hasWinner;
+    }
+    // let comRow = Math.floor(Math.random() * 3);
+    // let comCell = Math.floor(Math.random() * 3);
+
+    const checkWinnerAndDraw = (target) => {
+      const hasWinner = checkWinner(target);
+      if (hasWinner) { // 승자 있으면
+        $result.textContent = `${turn} 승리`;
+        $table.removeEventListener('click', callback);
+        return;
+      }
+      // 없으면 무승부 검사
+      const draw = [].concat(...rows).every((cell) => cell.textContent);
+      // every((배열 내 요소)=> {판별 함수}); 는 배열 내 모든 요소가 판별 함수를 통과하는지 테스트(true, false)
+      // some((배열 내 요소)=> {판별 함수}); 는 배열 내 요소 하나라도 판별 함수를 통과하는지 테스트(true, false)
+      if (draw) {
+        $result.textContent = `무승부`;
+        return;
+      }
+      // if (turn === 'O') { // 턴 넘기기
+      //   turn = 'X';
+      // }
+      // else if (turn === 'X') {
+      //   turn = 'O';
+      // }
+      turn = (turn === 'O' ? 'X' : 'O'); // 위 코드를 삼항연산자로 줄일 수 있음
+    };
+    let clickable = true;
+    const callback = (event) => {
+      if (!clickable) return;
+      if (event.target.textContent) return; // 칸에 글자가 있는지 여부
+      event.target.textContent = turn;
+      // 승부 확인
+      checkWinnerAndDraw(event.target);
+      if (turn === 'X') { // 컴퓨터 턴
+        const emptyCells = rows.flat().filter((v) => !v.textContent);
+        // filter((배열 요소) => {판별 함수}); 메서드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환
+        const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        clickable = false; // 컴퓨터 턴일 때, 나는 누르지 못하도록 하기 위해서
+        setTimeout(() => {
+          randomCell.textContent = 'X';
+          checkWinnerAndDraw(randomCell);
+          clickable = true; // 컴퓨터 턴이 끝난 후엔 누를 수 있도록
+        }, 1000);
+      }
+      /* 내가 작성한 코드 */
+      // setTimeout(() => {
+      //   while (true) {
+      //     if (rows[comRow][comCell].textContent === '') {
+      //       rows[comRow][comCell].textContent = turn;
+      //       hasWinner = checkWinner(rows[comRow][comCell]);
+      //       if (hasWinner) {
+      //         $result.textContent = `${turn} 승리`;
+      //         $table.removeEventListener('click', callback);
+      //         return;
+      //       }
+      //       turn = (turn === 'O' ? 'X' : 'O');
+      //       break;
+      //     }
+      //     else if (rows[comRow][comCell].textContent !== '') {
+      //       comRow = Math.floor(Math.random() * 3);
+      //       comCell = Math.floor(Math.random() * 3);
+      //     }
+      //   }
+      // }, 1000) 
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const $tr = document.createElement('tr');
+      const cells = [];
+      for (let j = 0; j < 3; j++) {
+        const $td = document.createElement('td');
+        cells.push($td);
+        // $td.addEventListener('click', callback);
+        $tr.append($td);
+      }
+      rows.push(cells);
+      $table.append($tr);
+    }
+    $table.addEventListener('click', callback);
+    /*
+      이벤트 버블링
+      한 요소에 이벤트가 발생하면, 이 요소에 할당된 핸들러가 동작하고, 이어서 부모 요소의 핸들러가 동작하고
+      가장 최상단의 조상 요소를 만날 때까지 이 과정이 반복되면서 요소 각각에 할당된 핸들러가 동작함
+      $td -> $tr -> $table -> body
+      현재 내가 이벤트를 할당한 태그를 갖고오고 싶으면 event.currentTarget, 내가 클릭한 태그를 가져오고 싶으면 event.target
+      이벤트 버블링을 막고싶다면? event.stopPropagation();
+ 
+      이벤트 캡쳐링
+      한 요소에 이벤트가 발생하면, 자식 요소로 전파되는 방식
+      addEventListener('동작', 함수, 캡처링 여부(true, false)) -> false가 기본 값
+    */
+    body.append($table);
+    body.append($result);
+  </script>
+</body>
+
+</html>

@@ -43,3 +43,9 @@
 ### <최종 순서도>
 
 ![스크린샷 2022-08-04 오후 7 14 20](https://user-images.githubusercontent.com/71623879/182823340-bc38f551-10b0-4b94-a103-1a6f115792aa.png)
+
+## 7. Tic-Tac-Toe
+
+### <순서도>
+
+![스크린샷 2022-08-05 오후 4 36 46](https://user-images.githubusercontent.com/71623879/183044559-1d958f8d-dcc4-4df1-bed1-0cd4584f54d3.png)

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>텍스트 RPG</title>
+</head>
+
+<body>
+  <form id="start-screen">
+    <input id="name-input" placeholder="캐릭터 이름을 입력하세요!" />
+    <button id="start">시작</button>
+  </form>
+  <div id="screen">
+    <div id="hero-stat">
+      <span id="hero-name"></span>
+      <span id="hero-level"></span>
+      <span id="hero-hp"></span>
+      <span id="hero-xp"></span>
+      <span id="hero-att"></span>
+    </div>
+    <form id="game-menu" style="display: none;">
+      <div id="menu-1">1.모험</div>
+      <div id="menu-2">2.휴식</div>
+      <div id="menu-3">3.종료</div>
+      <input id="menu-input" />
+      <button id="menu-button">입력</button>
+    </form>
+    <form id="battle-menu" style="display: none;">
+      <div id="battle-1">1.공격</div>
+      <div id="battle-2">2.회복</div>
+      <div id="battle-3">3.도망</div>
+      <input id="battle-input" />
+      <button id="battle-button">입력</button>
+    </form>
+    <br>
+    <div id="message">
+    </div>
+    <br>
+    <div id="monster-stat">
+      <span id="monster-name"></span>
+      <span id="monster-hp"></span>
+      <span id="monster-att"></span>
+    </div>
+  </div>
+  <script>
+    const $startScreen = document.querySelector('#start-screen');
+    const $gameMenu = document.querySelector('#game-menu');
+    const $battleMenu = document.querySelector('#battle-menu');
+    const $heroName = document.querySelector('#hero-name');
+    const $heroLevel = document.querySelector('#hero-level');
+    const $heroHp = document.querySelector('#hero-hp');
+    const $heroXp = document.querySelector('#hero-xp');
+    const $heroAtt = document.querySelector('#hero-att');
+    const $monsterName = document.querySelector('#monster-name');
+    const $monsterHp = document.querySelector('#monster-hp');
+    const $monsterAtt = document.querySelector('#monster-att');
+    const $message = document.querySelector('#message');
+
+    const hero = {
+      name: '',
+      lev: 1,
+      maxHp: 100,
+      hp: 100,
+      xp: 0,
+      att: 10,
+      attack(monster) { // 객체 리터럴 내 function 메소드는 function 키워드 생략 가능
+        monster.hp -= this.att;
+        this.hp -= monster.att;
+      },
+      heal(monster) {
+        this.hp += 20;
+        this.hp -= monster.att;
+      }
+      /* 
+        this
+        js의 this는 다른 언어의 this랑은 조금 다름!
+        1. 일반적으로 this는 window
+        2. 객체 내 this는 자기 자신을 가리킴(단, 객체.method()를 했을 때만!)
+          예외)
+            const b = {
+              name: 'abc',
+              sayName(){
+                console.log(this === b);
+              }
+            }
+            b.sayName() => true;
+            const bf = b.sayName;
+            bf(); => false; -> 이 때, this는 window!
+        3. 화살표 함수 내 this 는 window(document의 부모, 브라우저 전체를 총괄)를 가리킴. 화살표 함수를 쓸 땐 this를 쓰지 말자!
+      */
+    };
+    let monster = null;
+    const monsterList = [
+      {
+        name: '혀누기',
+        hp: 20,
+        att: 2,
+        xp: 5,
+        attack: function (hero) {
+          this.hp -= hero.att;
+          hero.hp -= this.att;
+        }
+      },
+      {
+        name: '슬라임',
+        hp: 50,
+        att: 10,
+        xp: 20,
+        attack: function (hero) {
+          this.hp -= hero.att;
+          hero.hp -= this.att;
+        }
+      },
+      {
+        name: '검마',
+        hp: 150,
+        att: 35,
+        xp: 50,
+        attack: function (hero) {
+          this.hp -= hero.att;
+          hero.hp -= this.att;
+        }
+      },
+    ]
+    $startScreen.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = event.target['name-input'].value;
+      $startScreen.style.display = 'none';
+      $gameMenu.style.display = 'block';
+      $heroName.textContent = name;
+      $heroLevel.textContent = `${hero.lev}Lev`;
+      $heroHp.textContent = `HP: ${hero.hp}/${hero.maxHp}`;
+      $heroXp.textContent = `XP: ${hero.xp}/${hero.lev * 15}`;
+      $heroAtt.textContent = `ATT: ${hero.att}`;
+      hero.name = name;
+    });
+    $gameMenu.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = event.target['menu-input'].value;
+      if (input === '1') {
+        // 모험
+        $gameMenu.style.display = 'none';
+        $battleMenu.style.display = 'block';
+        monster = JSON.parse(
+          JSON.stringify(monsterList[Math.floor(Math.random() * monsterList.length)])
+        ); //깊은 복사 -> 깊은 복사를 한 이유: 객체 내 정보만 필요할 뿐 객체 자체를 가져올 필요가 없기 떄문
+        /* 
+        깊은 복사 : 변수명 = JSON.parse(JSON.stringify(객체 or 배열));
+        단, JSON.parse(JSON.stringify(객체 or 배열))는 함수나 Math, Date 같은 객체는 복사가 불가능 + 성능 ↓ -> 실무에서는 lodash 같은 라이브러리를 주로 사용
+        얕은 복사 : 변수명 = {...객체} or [...배열], slice 메소드, concat 메소드; 
+        얕은복사 vs 깊은복사: 얕은 복사는 겉 껍데기만 복사하는 것(내부는 참조), 깊은 복사는 전부 다 참조 관계가 끊기고 복사됨
+        ex) 참조 vs 얕은복사 vs 깊은복사
+          const a = [];
+          const b = 'hello';
+          const c = {};
+          const arr = [a, b, c];
+          const arr1 = arr; -> 참조
+          arr1[1] = 'hi' -> arr1[1] 도 hi, arr[1] 도 hi로 바뀜
+          
+          const arr2 = [...arr] -> 얕은복사
+          arr2[1] = 'bonjour' -> arr2[1] 은 'bonjour', arr[1] 은'hi' 그대로 (arr[1] 은 원시 값(문자열)이라 참조 X)
+          arr2[0].push(1) -> arr2[0] 도 [1], arr[0] 도 [1]이 되어버림(arr[0], arr[2]는 객체라 참조가 되기 때문)
+
+          const arr3 = JSON.parse(JSON.stringify(arr)); -> 깊은 복사
+          arr3[0].push(2) -> arr3[0] 은 [1, 2] arr[0] 은 [1] 이 됨(깊은 복사는 겉 껍데기 뿐 아니라 내부의 참조도 끊어버리기 때문)
+        */
+        /*
+          객체 생성
+          클래스 이전에는 함수(factory function)로 객체를 생성
+          function createMonster(name, hp, att, xp){
+            return {name, hp, att, xp};
+          }
+          const monster1 = createMonster('a', 25, 10, 11);
+          const monster2 = createMonster('b', 27, 12, 12);
+          const monster3 = createMonster('c', 30, 14, 13);
+          const monster4 = createMonster('d', 32, 16, 14);
+
+          생성자 함수로도 객체 생성가능(일반적으로 생성자 함수는 함수 첫 문자를 대문자로!)
+           function Monster(name, hp, att, xp){
+            this.name = name;
+            this.hp = hp;
+            this.att = att;
+            this.xp = xp;
+            여기 this는 window
+          }
+          생성자 함수에 메소드를 추가하려면? prototype 속성을 사용해서 추가해야 함 
+          Monster.prototype.attack = fuction(monster) {
+            monster.hp -= this.att;
+            this.hp -= monster.att;
+          }
+          const monster1 = new Monster('a', 25, 10, 11);
+          const monster1 = new Monster('b', 27, 12, 12 );
+          -> 함수 앞에 new를 붙이면 this가 새로운 객체가 됨!
+          
+          클래스 이후
+          class Monster {
+            
+            constructor(name, hp att, xp) { -> 생성자 함수를 조금 더 편하게 사용하기 위함
+              this.name = name;
+              this.hp = hp;
+              this.att = att;
+              this.xp = xp;
+            }
+            클래스 내에 메소드도 추가할 수 있음, 클래스 내의 this는 새로 생성된 객체
+            attack(monster) {
+            monster.hp -= this.att;
+            this.hp -= monster.att;
+            },
+
+            heal(monster) {
+            this.hp += 20;
+            this.hp -= monster.att;
+            }
+          }
+        */
+        monster.maxHp = monster.hp;
+        $monsterName.textContent = monster.name;
+        $monsterHp.textContent = `HP: ${monster.hp}/${monster.maxHp}`;
+        $monsterAtt.textContent = `ATT: ${monster.att}`;
+        console.log(monster);
+      } else if (input === '2') {
+        // 휴식
+      } else if (input === '3') {
+        // 종료
+      }
+    })
+    $battleMenu.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = event.target['battle-input'].value;
+      if (input === '1') {
+        // 공격
+        hero.attack(monster);
+        monster.attack;
+        $heroHp.textContent = `HP: ${hero.hp}/${hero.maxHp}`;
+        $monsterHp.textContent = `HP: ${monster.hp}/${monster.maxHp}`;
+        $message.textContent = `${hero.att}의 데미지를 주고, ${monster.att}의 데미지를 받았다.`
+      } else if (input === '2') {
+        // 회복
+      } else if (input === '3') {
+        // 도망
+      }
+    })
+  </script>
+</body>
+
+</html>

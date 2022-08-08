@@ -55,3 +55,9 @@
 ### <순서도>
 
 ![스크린샷 2022-08-07 오후 8 07 03](https://user-images.githubusercontent.com/71623879/183287712-91141e47-ce0e-4ba6-b082-07b465cde3b2.png)
+
+## 9. 카드 짝 맞추기
+
+### <순서도>
+
+![스크린샷 2022-08-08 오전 11 14 59](https://user-images.githubusercontent.com/71623879/183362327-5bd479a2-efee-4f83-8f6b-de7d99f11655.png)

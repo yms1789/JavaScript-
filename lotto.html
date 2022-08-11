@@ -31,7 +31,7 @@
 
 <body>
   <h2>
-    로또 번호 7자리를 입력하세요<h3>(ex): 1 2 3 4 5 6 7)</h3>
+    로또 번호 6자리를 입력하세요<h3>(ex): 1 2 3 4 5 6)</h3>
   </h2>
   <form id="form" style="margin-bottom: 20px;">
     <input type="text" id="input">
@@ -121,14 +121,13 @@
       let bonusCount = 0;
       const userWinBalls = userLotto.slice(0, 6).sort((a, b) => (a - b)).map((item) => parseInt(item, 10));
       console.log(userWinBalls + '\n' + winBalls);
-      const userBonus = parseInt(userLotto[6]);
       for (let i = 0; i < userWinBalls.length; i++) {
         if (winBalls.indexOf(userWinBalls[i]) <= -1) {
           continue;
         }
         count += 1;
       }
-      if (userBonus === bonus) {
+      if (userWinBalls.includes(bonus)) {
         bonusCount += 1;
       }
       switch (true) {
@@ -155,7 +154,7 @@
       $button.disabled = true;
       $input.disabled = true;
       userLotto = $input.value.split(' ');
-      if (userLotto.length !== 7) {
+      if (userLotto.length !== 6) {
         alert('양식에 맞춰 입력해주세요');
         $input.value = '';
         return;

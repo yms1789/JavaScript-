@@ -177,7 +177,7 @@
           const monster2 = createMonster('b', 27, 12, 12);
           const monster3 = createMonster('c', 30, 14, 13);
           const monster4 = createMonster('d', 32, 16, 14);
-
+3
           생성자 함수로도 객체 생성가능(일반적으로 생성자 함수는 함수 첫 문자를 대문자로!)
            function Monster(name, hp, att, xp){
             this.name = name;
@@ -192,7 +192,7 @@
             this.hp -= monster.att;
           }
           const monster1 = new Monster('a', 25, 10, 11);
-          const monster1 = new Monster('b', 27, 12, 12 );
+          const monster2 = new Monster('b', 27, 12, 12 );
           -> 함수 앞에 new를 붙이면 this가 새로운 객체가 됨!
           
           클래스 이후

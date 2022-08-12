@@ -62,8 +62,14 @@
 
 ![스크린샷 2022-08-08 오전 11 14 59](https://user-images.githubusercontent.com/71623879/183362327-5bd479a2-efee-4f83-8f6b-de7d99f11655.png)
 
-## 10. 지뢰찾기 게임
+## 10. 지뢰 찾기
 
 ### <순서도>
 
 ![스크린샷 2022-08-10 오후 2 42 50](https://user-images.githubusercontent.com/71623879/183824702-76598374-b62e-4a1f-9d43-f49edd018a1b.png)
+
+## 11. 2048
+
+### <순서도>
+
+![스크린샷 2022-08-12 오후 5 39 18](https://user-images.githubusercontent.com/71623879/184317852-9c5f1145-e516-441e-80e7-96b4a6035296.png)

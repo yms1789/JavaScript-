@@ -73,3 +73,8 @@
 ### <순서도>
 
 ![스크린샷 2022-08-12 오후 5 39 18](https://user-images.githubusercontent.com/71623879/184317852-9c5f1145-e516-441e-80e7-96b4a6035296.png)
+
+## 12. 두더지 잡기
+
+<순서도>
+![스크린샷 2022-08-16 오후 2 06 11](https://user-images.githubusercontent.com/71623879/184819189-55da77f4-476d-4c81-b663-ffef5d12be90.png)

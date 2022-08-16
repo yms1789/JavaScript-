@@ -130,8 +130,8 @@
         });
       });
       const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-
-      data[randomCell[0]][randomCell[1]] = 2;
+      const randomNumber = Math.floor(Math.random() * 2 + 1);
+      data[randomCell[0]][randomCell[1]] = randomNumber === 1 ? 2 : 4;
     }
     function drawTable() {
       data.forEach((rowData, i) => {
@@ -149,13 +149,7 @@
     }
 
     startGame();
-    // data = [
-    //   [0, 2, 4, 2],
-    //   [0, 0, 8, 0],
-    //   [2, 2, 4, 8],
-    //   [0, 16, 0, 4],
-    // ]
-    // drawTable();
+
     function moveCells(directions) {
       switch (directions) {
         case 'up': {
@@ -171,6 +165,8 @@
                 const prevData = currentRow[currentRow.length - 1];
                 // console.log(`prev: ${prevData}`);
                 if (prevData === cellData) {
+                  const score = parseInt($score.textContent);
+                  $score.textContent = score + currentRow[currentRow.length - 1] * 2;
                   currentRow[currentRow.length - 1] *= -2;
                 } else {
                   newData[j].push(cellData);
@@ -195,6 +191,8 @@
                 const currentRow = newData[j];
                 const prevData = currentRow[currentRow.length - 1];
                 if (prevData === data[3 - i][j]) {
+                  const score = parseInt($score.textContent);
+                  $score.textContent = score + currentRow[currentRow.length - 1] * 2;
                   currentRow[currentRow.length - 1] *= -2;
                 } else {
                   newData[j].push(data[3 - i][j]);
@@ -202,6 +200,7 @@
 
               }
             });
+
           });
           [1, 2, 3, 4].forEach((cellData, i) => {
             [1, 2, 3, 4].forEach((rowData, j) => {
@@ -218,6 +217,8 @@
                 const currentRow = newData[i];
                 const prevData = currentRow[currentRow.length - 1];
                 if (prevData === cellData) { // 이전 값과 지금 값이 같으면
+                  const score = parseInt($score.textContent);
+                  $score.textContent = score + currentRow[currentRow.length - 1] * 2;
                   currentRow[currentRow.length - 1] *= -2; // 
                 } else {
                   newData[i].push(cellData);
@@ -242,8 +243,8 @@
                 const currentRow = newData[i];
                 const prevData = currentRow[currentRow.length - 1];
                 if (prevData === rowData[3 - j]) {
-                  // const score = parseInt($score.textContent);
-                  // $score.textContent = score + currentRow[currentRow.length - 1] * 2;
+                  const score = parseInt($score.textContent);
+                  $score.textContent = score + currentRow[currentRow.length - 1] * 2;
                   currentRow[currentRow.length - 1] *= -2;
                 } else {
                   newData[i].push(rowData[3 - j]);
